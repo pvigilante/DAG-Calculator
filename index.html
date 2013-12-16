@@ -7,21 +7,42 @@
         <link href="css/style.css" rel=stylesheet type="text/css">
         <script src="js/jquery.js"></script>
         <script src="phonegap.js"></script>
+        <script src="js/script.js"></script>
     </head>
     <body>
-        <div id="home-page" data-role="page">
-            <header data-role="header">
-                <h1>DAG Audio Player</h1>
-            </header>
-            <div data-role="content">
-                <p id="app-description">
-                    Digital AG Calculator
-                </p>
-            </div>
-            <footer data-role="footer">
-                <h3 id="copyright-title">Created by Peter Vigilante or Digital AG Studios</h3>
-            </footer>
-        </div>
-        
+        <table cellpadding="0" cellspacing="0" border="0" id="calculator">
+        <tr>
+        	<td id="result" colspan="4">0</td>
+        </tr>
+        	<tr>
+            	<td><button data-action='clear'>c</button></td>
+              <td><button data-type='plusmn' data-action='op'>&plusmn;</button></td>
+              <td><button data-type='percent' data-action='op'>%</button></td>
+              <th><button data-type='divide' data-action='op'>&divide;</button></th>
+            </tr>
+            <tr>
+            	<td><button data-action='input'>7</button></td>
+              <td><button data-action='input'>8</button></td>
+              <td><button data-action='input'>9</button></td>
+              <th><button data-type='times' data-action='op'>&times;</button></th>
+            </tr>
+            <tr>
+            	<td><button data-action='input'>4</button></td>
+              <td><button data-action='input'>5</button></td>
+              <td><button data-action='input'>6</button></td>
+              <th><button data-type='minus' data-action='op'>&minus;</button></th>
+            </tr>
+            <tr>
+            	<td><button data-action='input'>1</button></td>
+              <td><button data-action='input'>2</button></td>
+              <td><button data-action='input'>3</button></td>
+              <th><button data-type='plus' data-action='op'>+</button></th>
+            </tr>
+            <tr>
+            	<td colspan="2"><button data-action='input'>0</button></td>
+              <td><button data-action='input'>.</button></td>
+              <th><button data-type='equals' data-action='op'>=</button></th>
+            </tr>
+        </table>
     </body>
 </html>
