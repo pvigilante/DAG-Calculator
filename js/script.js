@@ -11,20 +11,46 @@
 		//Selectors
 		var $result = $('#result'),
 			$calculator = $('#calculator');
+			$ops = $('[data-action=op]');
 		
+		resetCalculator('0');
 		//$result.html(input.toString());
 		//////////////////////////////////
 		// Input Click
         $calculator.on('click', '[data-action=input]', function(e){
 			var $this = $(this);
-			e.preventDefault();
-			if(($result.html() == '0') || (parseInt($result.html()) > 0)){
-				$result.html('');
-				input.push(parseInt($this.html()));
-				$result.html(input[input.length -1].toString());	
+			//e.preventDefault();
+			
+			if($result.data("fromPrevious") == true){
+				resetCalculator($this.text());
+			} else if(($result.data('isPendingFunction') == true) &&
+						($result.data('valueOneLocked') == false)){
+				$result.data('valueOne', $result.val());
+				$result.data('valueOneLocked', true);
+				$result.val($this.text());
+				$result.data('valueTwo', $result.val());
+				$result.data('valueTwoLocked', true);	
+				console.log('hi');			
+			} else if (($result.data('isPendingFunction') == true) &&
+						($result.data('valueOneLocked') == true)) {
+				var curValue = $result.val(),
+					toAdd = $this.text(),
+					newValue = curValue + toAdd; // *?
+					
+				$result.val(newValue);
+				$result.data('valueTwo', $result.val());
+				$result.data('valueTwoLocked', true);
+					
 			} else {
-				input[input.length -1] = parseInt(input[input.length -1] + $this.html());
-				$result.html(input[input.length -1].toString());
+				var curValue = $result.val();
+				if(curValue == '0'){
+					curValue = '';	
+				}
+				
+				var toAdd = $this.text(),
+					newValue = curValue + toAdd;	
+				$result.val(newValue);
+				
 			}
 			//currentInput++;
 			//$result.text(input.toString());
@@ -32,31 +58,43 @@
 		// end input click
 		///////////////////////////////////////
 		$calculator.on('click', '[data-action=op]', function(e){
-			e.preventDefault();
+			//e.preventDefault();
 			var $this = $(this);
-			if($result.html() != '0'){
-				var oper = getOp($this.data('type'));
-					
-					equation.push(input[input.length -1]);
-					
-					if(equation.length > 2){
-						result = doMath(equation[equation.length - 3], equation[equation.length - 2], equation[equation.length - 1]);
-						equation.push(result);
-						input.push(result);
-					} else {
-						result = 0;
-					}
-					equation.push(oper);
-					//equation.push(operators[currentOp]);
-					
-					$result.html(result.toString());
-					
-					
-				
-				console.log(equation);
+			
+			
+			if($result.data('fromPrevious') == true){
+				resetCalculator($result.val());
+				$result.data('valueOneLocked', false);
+				$result.data('fromPrevious', false);
 			}
+			var pendingFunction = $this.data('type');
+			
+			$result.data('isPendingFunction', true);
+			$result.data('thePendingFunction', pendingFunction);
+			$ops.removeClass('pendingFunction');
+			$this.addClass('pendingFunction');
 		});
 		
+		$calculator.on('click', '[data-action=equals]', function(e){
+			if(($result.data('valueOneLocked') == true) && ($result.data('valueTwoLocked') == true)){
+				if($result.data('thePendingFunction') == 'plus'){
+					var finalValue = parseFloat($result.data('valueOne')) + parseFloat($result.data('valueTwo'));
+				}
+				else if($result.data('thePendingFunction') == 'minus'){
+					var finalValue = parseFloat($result.data('valueOne')) - parseFloat($result.data('valueTwo'));
+				}
+				else if($result.data('thePendingFunction') == 'times'){
+					var finalValue = parseFloat($result.data('valueOne')) * parseFloat($result.data('valueTwo'));
+				}
+				else if($result.data('thePendingFunction') == 'divide'){
+					var finalValue = parseFloat($result.data('valueOne')) / parseFloat($result.data('valueTwo'));
+				}
+				
+				$result.val(finalValue);
+				resetCaluculator(finalValue);
+				$result.data('fromPrevious', true);
+			}
+		});
 		function getOp(op){
 			var oper;
 			switch (op){
@@ -76,8 +114,6 @@
 					oper = '=';
 					break;	
 			}
-			
-			
 			return oper;
 		}
 		
@@ -102,6 +138,19 @@
 					break;	
 			}
 			return result;
+		}
+		
+		function resetCalculator(curValue){
+			$result.val(curValue);
+			$ops.removeClass('pendingFunction');
+			$result.data('isPendingFunction', false);
+			$result.data('thePendingFunction', "");
+			$result.data('valueOneLocked', false);
+			$result.data('valueTwoLocked', false);
+			$result.data('valueOne', curValue);
+			$result.data('valueTwo', 0);
+			$result.data('fromPrevious', false);
+			
 		}
 		
 		

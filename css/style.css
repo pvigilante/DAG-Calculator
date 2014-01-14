@@ -5,10 +5,13 @@ body, table {
 }
 table {
 	border-collapse:collapse;
+	width:100%;
+	height:100%;
+	position:fixed;
 }
 td, th {
 	border:1px solid grey;
-	height:5em;
+	position:relative;
 }
 th button {
 	background:#FFBD2B;
@@ -17,10 +20,12 @@ button {
 	border:none;
 	display:block;
 	width:100%;
-	padding:2em;
 	font-size:1em;
-	height:5em;
+	height:100%;
+	position:absolute;
 	background:#DFDFDF;
+	top:0;
+	left:0;
 }
 button[data-action=input]{
 	background:#F0F0F0;	
@@ -28,4 +33,9 @@ button[data-action=input]{
 #result {
 	padding:0 2em;
 	text-align:right;
+	width:100%;
+	height:100%;
+	box-sizing:border-box;
+	border:none;
+	font-size:1em;
 }
